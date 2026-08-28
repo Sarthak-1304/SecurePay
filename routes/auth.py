@@ -257,7 +257,11 @@ def login():
             next_page = request.args.get('next')
             if next_page and next_page.startswith('/'):
                 return redirect(next_page)
-            return redirect(url_for('home'))
+
+            # Direct admin to Admin Control Panel; regular user to Wallet Dashboard
+            if user['role'] == 'admin':
+                return redirect(url_for('admin.dashboard'))
+            return redirect(url_for('wallet.dashboard'))
 
         except Exception as e:
             conn.rollback()

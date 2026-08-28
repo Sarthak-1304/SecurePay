@@ -26,7 +26,13 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top py-3">
         <div class="container">
             <!-- Brand -->
-            <a class="navbar-brand d-flex align-items-center gap-2 text-white" href="{{ url_for('home') }}">
+            {% if session.get('role') == 'admin' %}
+                <a class="navbar-brand d-flex align-items-center gap-2 text-white" href="{{ url_for('admin.dashboard') }}">
+            {% elif session.get('user_id') %}
+                <a class="navbar-brand d-flex align-items-center gap-2 text-white" href="{{ url_for('wallet.dashboard') }}">
+            {% else %}
+                <a class="navbar-brand d-flex align-items-center gap-2 text-white" href="{{ url_for('home') }}">
+            {% endif %}
                 <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 text-white shadow-sm" style="width: 38px; height: 38px;">
                     <i class="bi bi-shield-lock-fill fs-5"></i>
                 </div>
@@ -41,42 +47,45 @@
             <!-- Nav links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1 mt-3 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-white-50" href="{{ url_for('home') }}">
-                            <i class="bi bi-house me-1"></i> Home
-                        </a>
-                    </li>
-
                     {% if session.get('user_id') %}
-                        <!-- Logged-in navigation -->
-                        <li class="nav-item">
-                            <a class="nav-link text-white-50" href="{{ url_for('wallet.dashboard') }}">
-                                <i class="bi bi-wallet2 me-1"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white-50" href="{{ url_for('wallet.transfer') }}">
-                                <i class="bi bi-arrow-left-right me-1"></i> Transfer
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white-50" href="{{ url_for('wallet.history') }}">
-                                <i class="bi bi-clock-history me-1"></i> History
-                            </a>
-                        </li>
-
                         {% if session.get('role') == 'admin' %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-warning fw-semibold px-2" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-shield-shaded me-1"></i> Admin Panel
+                            <!-- Admin-Specific Direct Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link text-warning fw-semibold" href="{{ url_for('admin.dashboard') }}">
+                                    <i class="bi bi-speedometer2 me-1"></i> Control Panel
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-dark shadow-lg border-0 mt-2" style="border-radius: 0.75rem;">
-                                    <li><a class="dropdown-item py-2" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-speedometer2 me-2 text-warning"></i> Admin Overview</a></li>
-                                    <li><a class="dropdown-item py-2" href="{{ url_for('admin.users') }}"><i class="bi bi-people me-2 text-primary"></i> Manage Users</a></li>
-                                    <li><a class="dropdown-item py-2" href="{{ url_for('admin.transactions') }}"><i class="bi bi-cash-stack me-2 text-info"></i> All Transactions</a></li>
-                                    <li><hr class="dropdown-divider border-secondary opacity-25"></li>
-                                    <li><a class="dropdown-item py-2" href="{{ url_for('admin.audit_logs') }}"><i class="bi bi-journal-text me-2 text-success"></i> Security Audit Logs</a></li>
-                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" href="{{ url_for('admin.users') }}">
+                                    <i class="bi bi-people me-1"></i> Manage Users
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" href="{{ url_for('admin.transactions') }}">
+                                    <i class="bi bi-cash-stack me-1"></i> All Transactions
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" href="{{ url_for('admin.audit_logs') }}">
+                                    <i class="bi bi-journal-text me-1"></i> Audit Logs
+                                </a>
+                            </li>
+                        {% else %}
+                            <!-- Regular User Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" href="{{ url_for('wallet.dashboard') }}">
+                                    <i class="bi bi-wallet2 me-1"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" href="{{ url_for('wallet.transfer') }}">
+                                    <i class="bi bi-arrow-left-right me-1"></i> Transfer
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50" href="{{ url_for('wallet.history') }}">
+                                    <i class="bi bi-clock-history me-1"></i> History
+                                </a>
                             </li>
                         {% endif %}
 
@@ -96,6 +105,11 @@
                         </li>
                     {% else %}
                         <!-- Logged-out navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link text-white-50" href="{{ url_for('home') }}">
+                                <i class="bi bi-house me-1"></i> Home
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-white-50" href="{{ url_for('auth.login') }}">
                                 <i class="bi bi-box-arrow-in-right me-1"></i> Login

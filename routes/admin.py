@@ -72,6 +72,19 @@ def dashboard():
         )
         recent_logs = cursor.fetchall()
 
+        # High-Priority: Pending Account Unlock Requests (submitted by currently locked users)
+        cursor.execute(
+            """SELECT al.id, al.user_id, al.details, al.created_at, al.ip_address,
+                      u.username, u.full_name, u.email, u.is_locked,
+                      a.account_number, a.balance
+               FROM audit_logs al
+               JOIN users u ON al.user_id = u.id
+               LEFT JOIN accounts a ON u.id = a.user_id
+               WHERE al.action = 'UNLOCK_REQUEST' AND u.is_locked = TRUE
+               ORDER BY al.created_at DESC"""
+        )
+        pending_unlock_requests = cursor.fetchall()
+
         return render_template(
             'admin/dashboard.html',
             total_users=total_users,
@@ -79,12 +92,13 @@ def dashboard():
             total_balance=total_balance,
             total_txns=total_txns,
             recent_users=recent_users,
-            recent_logs=recent_logs
+            recent_logs=recent_logs,
+            pending_unlock_requests=pending_unlock_requests
         )
 
     except Exception as e:
         flash("An error occurred while loading the admin dashboard.", "danger")
-        return render_template('admin/dashboard.html', total_users=0, locked_users=0, total_balance=0, total_txns=0, recent_users=[], recent_logs=[])
+        return render_template('admin/dashboard.html', total_users=0, locked_users=0, total_balance=0, total_txns=0, recent_users=[], recent_logs=[], pending_unlock_requests=[])
     finally:
         cursor.close()
         conn.close()
