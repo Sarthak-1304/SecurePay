@@ -27,7 +27,7 @@ def query_db(query, params=(), one=False):
     return result
 
 
-def run_tests():
+def run_auth_tests():
     print("=" * 60)
     print("  RUNNING SECUREPAY PHASE 3 AUTHENTICATION TESTS")
     print("=" * 60)
@@ -206,5 +206,7 @@ def run_tests():
     print("=" * 60)
 
 
+run_tests = run_auth_tests
+
 if __name__ == '__main__':
-    run_tests()
+    run_auth_tests()
