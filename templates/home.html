@@ -1,0 +1,127 @@
+{#
+  home.html — Landing page
+
+  This template EXTENDS base.html:
+  - It inherits the navbar, footer, Bootstrap CSS, and flash messages
+  - It only needs to fill in the "block content" section
+#}
+{% extends "base.html" %}
+
+{% block title %}SecurePay — Mini Digital Wallet{% endblock %}
+
+{% block content %}
+
+<!-- ========== HERO SECTION ========== -->
+<section class="hero-section text-center text-white py-5">
+    <div class="container py-5">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-shield-lock-fill"></i> SecurePay
+        </h1>
+        <p class="lead">Your secure mini digital wallet</p>
+        <p class="text-white-50 mb-4">Deposit &bull; Withdraw &bull; Transfer &bull; Track</p>
+        <div class="mt-4">
+            <!-- These links will point to real pages in Phase 2 -->
+            <a href="#" class="btn btn-light btn-lg me-2 shadow">
+                <i class="bi bi-person-plus-fill"></i> Register
+            </a>
+            <a href="#" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FEATURE CARDS ========== -->
+<section class="container py-5">
+    <h2 class="text-center mb-4">Why SecurePay?</h2>
+    <div class="row g-4">
+
+        <!-- Card 1: Security -->
+        <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body py-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-lock-fill text-primary display-4"></i>
+                    </div>
+                    <h5 class="card-title">Secure</h5>
+                    <p class="card-text text-muted">
+                        Password hashing, session-based auth, and automatic
+                        account locking after failed attempts.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Transfers -->
+        <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body py-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-arrow-left-right text-success display-4"></i>
+                    </div>
+                    <h5 class="card-title">Transfer</h5>
+                    <p class="card-text text-muted">
+                        Send money to other users instantly with atomic
+                        SQL transactions ensuring data integrity.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: History -->
+        <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+                <div class="card-body py-4">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-clock-history text-warning display-4"></i>
+                    </div>
+                    <h5 class="card-title">Track</h5>
+                    <p class="card-text text-muted">
+                        Full transaction history with filters, pagination,
+                        and a complete audit trail.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
+                    <span class="fw-bold fs-4">1</span>
+                </div>
+                <h6>Register</h6>
+                <p class="text-muted small">Create your account in seconds</p>
+            </div>
+            <div class="col-md-3">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
+                    <span class="fw-bold fs-4">2</span>
+                </div>
+                <h6>Deposit</h6>
+                <p class="text-muted small">Add funds to your wallet</p>
+            </div>
+            <div class="col-md-3">
+                <div class="rounded-circle bg-info text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
+                    <span class="fw-bold fs-4">3</span>
+                </div>
+                <h6>Transfer</h6>
+                <p class="text-muted small">Send money to other users</p>
+            </div>
+            <div class="col-md-3">
+                <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
+                    <span class="fw-bold fs-4">4</span>
+                </div>
+                <h6>Track</h6>
+                <p class="text-muted small">View your full history</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

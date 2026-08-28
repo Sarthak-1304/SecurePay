@@ -1,0 +1,24 @@
+/*
+  style.css — Minimal custom styles for SecurePay
+
+  Bootstrap handles 95% of the styling.
+  This file only adds things Bootstrap doesn't provide:
+    1. Hero section gradient background
+    2. Card hover effect
+    3. Smooth transitions
+*/
+
+/* ---- Hero Section ---- */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* ---- Card hover effect ---- */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}

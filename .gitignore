@@ -1,0 +1,29 @@
+# =============================================
+# .gitignore — Files that should NOT be committed
+# =============================================
+
+# Environment variables (contains secrets!)
+.env
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Agents
+.agents/
