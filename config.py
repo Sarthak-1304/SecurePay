@@ -26,6 +26,11 @@ class Config:
     # Flask uses this to sign session cookies (keeps sessions tamper-proof)
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-fallback-key-change-in-production')
 
+    # Session Cookie Security Flags
+    SESSION_COOKIE_HTTPONLY = True          # Blocks JavaScript from reading session cookies (XSS mitigation)
+    SESSION_COOKIE_SAMESITE = 'Lax'         # Prevents CSRF on state-changing requests
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024   # Max 16MB request payload (DoS mitigation)
+
     # MySQL connection settings
     MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
     MYSQL_PORT = int(os.getenv('MYSQL_PORT', 3306))

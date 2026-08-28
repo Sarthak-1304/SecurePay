@@ -181,7 +181,7 @@ def deposit():
 
     if request.method == 'POST':
         raw_amount = request.form.get('amount', '')
-        description = request.form.get('description', '').strip() or "Deposit to wallet"
+        description = (request.form.get('description', '').strip()[:255]) or "Deposit to wallet"
         client_ip = get_client_ip()
 
         # 1. Validate amount
@@ -288,7 +288,7 @@ def withdraw():
 
     if request.method == 'POST':
         raw_amount = request.form.get('amount', '')
-        description = request.form.get('description', '').strip() or "Withdrawal from wallet"
+        description = (request.form.get('description', '').strip()[:255]) or "Withdrawal from wallet"
         client_ip = get_client_ip()
 
         # 1. Validate amount format
@@ -418,7 +418,7 @@ def transfer():
     if request.method == 'POST':
         recipient_input = request.form.get('recipient', '').strip()
         raw_amount = request.form.get('amount', '')
-        description = request.form.get('description', '').strip() or "P2P Money Transfer"
+        description = (request.form.get('description', '').strip()[:255]) or "P2P Money Transfer"
         client_ip = get_client_ip()
 
         # 1. Validate Amount
