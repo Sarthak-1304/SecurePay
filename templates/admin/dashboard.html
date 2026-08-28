@@ -280,6 +280,8 @@
                                             <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">{{ log.action }}</span>
                                         {% elif 'UNLOCK_REQUEST' in log.action %}
                                             <span class="badge bg-warning-subtle text-dark border border-warning-subtle px-2 py-1"><i class="bi bi-envelope-exclamation me-1"></i> {{ log.action }}</span>
+                                        {% elif 'UNLOCK_REJECTED' in log.action %}
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1"><i class="bi bi-x-octagon me-1"></i> {{ log.action }}</span>
                                         {% elif 'FAIL' in log.action or 'LOCK' in log.action or 'BLOCKED' in log.action %}
                                             <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">{{ log.action }}</span>
                                         {% else %}
