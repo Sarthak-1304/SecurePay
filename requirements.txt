@@ -7,3 +7,4 @@
 flask                    # Web framework
 mysql-connector-python   # Official MySQL driver (parameterized queries, no ORM)
 python-dotenv            # Loads .env file into environment variables
+gunicorn

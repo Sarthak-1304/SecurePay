@@ -23,9 +23,10 @@ HOW BLUEPRINTS WORK (coming in Phase 2):
 - Each file is a Flask "Blueprint" — a mini-app that gets registered with the main app
 - This keeps the code organized as the project grows
 """
-
+import os
 from flask import Flask, render_template
 from config import Config
+
 
 
 # =============================================
