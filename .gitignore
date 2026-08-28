@@ -27,3 +27,7 @@ Thumbs.db
 
 # Agents
 .agents/
+
+# Notes & Phase documentation
+phase*_notes.md
+phase*.md
