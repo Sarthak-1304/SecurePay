@@ -299,3 +299,51 @@ def logout():
     session.clear()
     flash("You have been logged out successfully.", "info")
     return redirect(url_for('auth.login'))
+
+
+@auth_bp.route('/request-unlock', methods=['GET', 'POST'])
+def request_unlock():
+    """
+    Account Unlock Request Form:
+    - Allows locked users to submit an unlock appeal to system administrators.
+    - Records an UNLOCK_REQUEST event in `audit_logs` so admins can review and unlock.
+    """
+    if request.method == 'POST':
+        identifier = request.form.get('username_or_email', '').strip()
+        reason = request.form.get('reason', '').strip()[:255] or "User requested unlock via support form."
+        client_ip = get_client_ip()
+
+        if not identifier:
+            flash("Please provide your username or email address.", "danger")
+            return render_template('auth/request_unlock.html')
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                "SELECT id, username, email, is_locked FROM users WHERE username = %s OR email = %s",
+                (identifier, identifier.lower())
+            )
+            user = cursor.fetchone()
+
+            if user:
+                # Log unlock request in audit_logs so admin sees it
+                cursor.execute(
+                    """INSERT INTO audit_logs (user_id, action, details, ip_address)
+                       VALUES (%s, 'UNLOCK_REQUEST', %s, %s)""",
+                    (user['id'], f"Unlock Request from @{user['username']}: {reason}", client_ip)
+                )
+                conn.commit()
+
+            # Show friendly message regardless of existence (prevents user enumeration)
+            flash("Your unlock request has been submitted to the administrator queue. Please check back shortly or email admin@securepay.com.", "success")
+            return redirect(url_for('auth.login'))
+        except Exception as e:
+            conn.rollback()
+            flash("An error occurred while submitting your request. Please email admin@securepay.com directly.", "danger")
+            return render_template('auth/request_unlock.html')
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template('auth/request_unlock.html')
