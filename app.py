@@ -38,7 +38,9 @@ app.config.from_object(Config)
 
 # Register Blueprints
 from routes.auth import auth_bp
+from routes.wallet import wallet_bp
 app.register_blueprint(auth_bp)
+app.register_blueprint(wallet_bp)
 
 
 
@@ -50,9 +52,13 @@ app.register_blueprint(auth_bp)
 # and sends the return value back to the browser.
 # =============================================
 
+from flask import session, redirect, url_for
+
 @app.route('/')
 def home():
-    """Home page — the landing page visitors see first."""
+    """Home page — if logged in, redirect to dashboard; otherwise show landing page."""
+    if 'user_id' in session:
+        return redirect(url_for('wallet.dashboard'))
     return render_template('home.html')
 
 

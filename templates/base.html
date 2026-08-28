@@ -64,6 +64,11 @@
                     </li>
                     {% if session.get('user_id') %}
                         <!-- Logged-in navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('wallet.dashboard') }}">
+                                <i class="bi bi-wallet2"></i> Dashboard
+                            </a>
+                        </li>
                         {% if session.get('role') == 'admin' %}
                             <li class="nav-item">
                                 <span class="badge bg-warning text-dark me-2 ms-2">Admin</span>

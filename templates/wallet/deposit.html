@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Deposit Funds — SecurePay{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <!-- Navigation Back -->
+            <a href="{{ url_for('wallet.dashboard') }}" class="btn btn-link text-decoration-none text-muted p-0 mb-3">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+
+            <div class="card shadow-sm border-0" style="border-radius: 1rem;">
+                <div class="card-header bg-success text-white text-center py-4" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                    <div class="display-6 mb-1"><i class="bi bi-wallet-fill"></i></div>
+                    <h4 class="mb-0 fw-bold">Deposit Funds</h4>
+                    <p class="text-white-50 small mb-0 mt-1">Add money to your SecurePay digital wallet</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Current Balance Info Box -->
+                    <div class="p-3 bg-light rounded-3 d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <span class="text-muted small d-block">Account Number</span>
+                            <strong class="font-monospace text-dark">{{ account.account_number if account else 'N/A' }}</strong>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-muted small d-block">Current Balance</span>
+                            <strong class="text-success fs-5">₹{{ "{:,.2f}".format(account.balance) if account else "0.00" }}</strong>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('wallet.deposit') }}">
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label fw-semibold">Deposit Amount (₹)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white fw-bold">₹</span>
+                                <input type="number" step="0.01" min="0.01" max="1000000" class="form-control"
+                                       id="amount" name="amount" placeholder="0.00" required autofocus>
+                            </div>
+                            <div class="form-text">Enter a positive amount (e.g., 500.00). Max ₹1,000,000.00.</div>
+                        </div>
+
+                        <!-- Quick Presets -->
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Quick Presets:</label>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='500'">+₹500</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='1000'">+₹1,000</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='5000'">+₹5,000</button>
+                            </div>
+                        </div>
+
+                        <!-- Description / Note -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">Description / Note <span class="text-muted small fw-normal">(Optional)</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <input type="text" class="form-control" id="description" name="description"
+                                       placeholder="e.g. Salary, Pocket Money, Bank Transfer" maxlength="255">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                                <i class="bi bi-check2-circle me-1"></i> Confirm Deposit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

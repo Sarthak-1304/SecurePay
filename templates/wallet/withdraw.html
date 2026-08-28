@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Withdraw Funds — SecurePay{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <!-- Navigation Back -->
+            <a href="{{ url_for('wallet.dashboard') }}" class="btn btn-link text-decoration-none text-muted p-0 mb-3">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+
+            <div class="card shadow-sm border-0" style="border-radius: 1rem;">
+                <div class="card-header bg-danger text-white text-center py-4" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                    <div class="display-6 mb-1"><i class="bi bi-cash-stack"></i></div>
+                    <h4 class="mb-0 fw-bold">Withdraw Funds</h4>
+                    <p class="text-white-50 small mb-0 mt-1">Safely withdraw money from your wallet</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Current Available Balance Info Box -->
+                    <div class="p-3 bg-light rounded-3 d-flex justify-content-between align-items-center mb-4 border">
+                        <div>
+                            <span class="text-muted small d-block">Account Number</span>
+                            <strong class="font-monospace text-dark">{{ account.account_number if account else 'N/A' }}</strong>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-muted small d-block">Available to Withdraw</span>
+                            <strong class="text-danger fs-5">₹{{ "{:,.2f}".format(account.balance) if account else "0.00" }}</strong>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('wallet.withdraw') }}">
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label fw-semibold">Withdrawal Amount (₹)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white fw-bold">₹</span>
+                                <input type="number" step="0.01" min="0.01" max="{{ account.balance if account else 0.00 }}" class="form-control"
+                                       id="amount" name="amount" placeholder="0.00" required autofocus>
+                            </div>
+                            <div class="form-text">Cannot exceed available balance of ₹{{ "{:,.2f}".format(account.balance) if account else "0.00" }}.</div>
+                        </div>
+
+                        <!-- Quick Presets -->
+                        {% if account and account.balance > 0 %}
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Quick Amount:</label>
+                            <div class="d-flex gap-2">
+                                {% if account.balance >= 500 %}
+                                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='500'">₹500</button>
+                                {% endif %}
+                                {% if account.balance >= 1000 %}
+                                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='1000'">₹1,000</button>
+                                {% endif %}
+                                <button type="button" class="btn btn-outline-danger btn-sm flex-fill" onclick="document.getElementById('amount').value='{{ account.balance }}'">Withdraw All</button>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Description / Note -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">Description / Purpose <span class="text-muted small fw-normal">(Optional)</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <input type="text" class="form-control" id="description" name="description"
+                                       placeholder="e.g. ATM Withdrawal, Bill Payment" maxlength="255">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-danger btn-lg shadow-sm" {% if not account or account.balance <= 0 %}disabled{% endif %}>
+                                <i class="bi bi-dash-circle me-1"></i> Confirm Withdrawal
+                            </button>
+                        </div>
+                        {% if not account or account.balance <= 0 %}
+                            <div class="text-center text-muted small mt-2">
+                                <i class="bi bi-info-circle me-1"></i> You currently have ₹0.00 balance. Please deposit funds first.
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
