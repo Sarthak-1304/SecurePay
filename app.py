@@ -68,12 +68,12 @@ def home():
 # Start the development server
 # =============================================
 if __name__ == '__main__':
-    # debug=True means:
-    #   1. Auto-reload when you save a file (no need to restart manually)
-    #   2. Show detailed error pages in the browser
-    #   3. NEVER use debug=True in production!
     print("=" * 50)
     print("  SecurePay is running!")
-    print("  Open: http://127.0.0.1:5000")
     print("=" * 50)
-    app.run(debug=True)
+
+    app.run(
+        host='0.0.0.0',
+        port=int(os.environ.get('PORT', 5000)),
+        debug=False
+    )
