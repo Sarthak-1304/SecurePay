@@ -7,22 +7,24 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <!-- Navigation Back -->
-            <a href="{{ url_for('wallet.dashboard') }}" class="btn btn-link text-decoration-none text-muted p-0 mb-3">
-                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            <a href="{{ url_for('wallet.dashboard') }}" class="btn btn-link text-decoration-none text-muted p-0 mb-3 small fw-semibold">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
             </a>
 
-            <div class="card shadow-sm border-0" style="border-radius: 1rem;">
-                <div class="card-header bg-danger text-white text-center py-4" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-                    <div class="display-6 mb-1"><i class="bi bi-cash-stack"></i></div>
+            <div class="card shadow-lg border-0" style="border-radius: 1.25rem;">
+                <div class="card-header bg-danger text-white text-center py-4 border-0" style="border-top-left-radius: 1.25rem; border-top-right-radius: 1.25rem; background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%) !important;">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-white bg-opacity-20 rounded-3 text-white shadow-sm mb-2" style="width: 44px; height: 44px;">
+                        <i class="bi bi-dash-circle-fill fs-4"></i>
+                    </div>
                     <h4 class="mb-0 fw-bold">Withdraw Funds</h4>
-                    <p class="text-white-50 small mb-0 mt-1">Safely withdraw money from your wallet</p>
+                    <p class="text-white-50 small mb-0 mt-1">Pessimistic locking & overdraft protection</p>
                 </div>
 
-                <div class="card-body p-4">
+                <div class="card-body p-4 p-md-5">
                     <!-- Current Available Balance Info Box -->
                     <div class="p-3 bg-light rounded-3 d-flex justify-content-between align-items-center mb-4 border">
                         <div>
-                            <span class="text-muted small d-block">Account Number</span>
+                            <span class="text-muted small d-block">Source Wallet</span>
                             <strong class="font-monospace text-dark">{{ account.account_number if account else 'N/A' }}</strong>
                         </div>
                         <div class="text-end">
@@ -34,44 +36,44 @@
                     <form method="POST" action="{{ url_for('wallet.withdraw') }}">
                         <!-- Amount -->
                         <div class="mb-3">
-                            <label for="amount" class="form-label fw-semibold">Withdrawal Amount (₹)</label>
+                            <label for="amount" class="form-label small fw-semibold text-muted text-uppercase">Withdrawal Amount (₹)</label>
                             <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-white fw-bold">₹</span>
-                                <input type="number" step="0.01" min="0.01" max="{{ account.balance if account else 0.00 }}" class="form-control"
+                                <span class="input-group-text bg-light fw-bold text-dark">₹</span>
+                                <input type="number" step="0.01" min="0.01" max="{{ account.balance if account else 0.00 }}" class="form-control fw-bold fs-4"
                                        id="amount" name="amount" placeholder="0.00" required autofocus>
                             </div>
-                            <div class="form-text">Cannot exceed available balance of ₹{{ "{:,.2f}".format(account.balance) if account else "0.00" }}.</div>
+                            <div class="form-text small">Cannot exceed available balance of ₹{{ "{:,.2f}".format(account.balance) if account else "0.00" }}.</div>
                         </div>
 
                         <!-- Quick Presets -->
                         {% if account and account.balance > 0 %}
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Quick Amount:</label>
+                        <div class="mb-4">
+                            <label class="form-label small text-muted d-block mb-2">Quick Amount:</label>
                             <div class="d-flex gap-2">
                                 {% if account.balance >= 500 %}
-                                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='500'">₹500</button>
+                                    <button type="button" class="preset-btn flex-fill" onclick="document.getElementById('amount').value='500'">₹500</button>
                                 {% endif %}
                                 {% if account.balance >= 1000 %}
-                                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="document.getElementById('amount').value='1000'">₹1,000</button>
+                                    <button type="button" class="preset-btn flex-fill" onclick="document.getElementById('amount').value='1000'">₹1,000</button>
                                 {% endif %}
-                                <button type="button" class="btn btn-outline-danger btn-sm flex-fill" onclick="document.getElementById('amount').value='{{ account.balance }}'">Withdraw All</button>
+                                <button type="button" class="preset-btn flex-fill text-danger border-danger-subtle" onclick="document.getElementById('amount').value='{{ account.balance }}'">Withdraw All</button>
                             </div>
                         </div>
                         {% endif %}
 
                         <!-- Description / Note -->
                         <div class="mb-4">
-                            <label for="description" class="form-label fw-semibold">Description / Purpose <span class="text-muted small fw-normal">(Optional)</span></label>
+                            <label for="description" class="form-label small fw-semibold text-muted text-uppercase">Description / Purpose <span class="text-muted text-lowercase fw-normal">(optional)</span></label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-card-text text-muted"></i></span>
                                 <input type="text" class="form-control" id="description" name="description"
-                                       placeholder="e.g. ATM Withdrawal, Bill Payment" maxlength="255">
+                                       placeholder="e.g. ATM Cashout, Bill Payment" maxlength="255">
                             </div>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="d-grid mb-2">
-                            <button type="submit" class="btn btn-danger btn-lg shadow-sm" {% if not account or account.balance <= 0 %}disabled{% endif %}>
+                            <button type="submit" class="btn btn-danger btn-lg shadow-sm py-3" {% if not account or account.balance <= 0 %}disabled{% endif %}>
                                 <i class="bi bi-dash-circle me-1"></i> Confirm Withdrawal
                             </button>
                         </div>

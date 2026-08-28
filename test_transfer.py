@@ -120,6 +120,12 @@ def run_transfer_tests():
     print("\n[TEST 5] Testing Successful Atomic P2P Transfer (John -> Jane)...")
     transfer_amount = Decimal('1200.00')
 
+    with client:
+        client.post('/login', data={'username_or_email': 'john', 'password': 'password123'})
+        curr_bal_row = query_db("SELECT balance FROM accounts WHERE user_id = 2", one=True)
+        if Decimal(str(curr_bal_row['balance'])) < transfer_amount + Decimal('500.00'):
+            client.post('/deposit', data={'amount': '3000.00', 'description': 'Topup for transfer test'})
+
     john_acc_start = query_db("SELECT id, account_number, balance FROM accounts WHERE user_id = 2", one=True)
     jane_acc_start = query_db("SELECT id, account_number, balance FROM accounts WHERE user_id = 3", one=True)
 

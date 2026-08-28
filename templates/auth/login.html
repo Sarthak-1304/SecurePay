@@ -6,20 +6,22 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white text-center py-3">
-                    <h4 class="mb-0 fw-bold">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-                    </h4>
-                    <p class="text-white-50 small mb-0 mt-1">Access your SecurePay digital wallet</p>
+            <div class="card shadow-lg border-0" style="border-radius: 1.25rem;">
+                <div class="card-header bg-dark text-white text-center py-4 border-0" style="border-top-left-radius: 1.25rem; border-top-right-radius: 1.25rem;">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 text-white shadow-sm mb-2" style="width: 44px; height: 44px;">
+                        <i class="bi bi-shield-lock-fill fs-4"></i>
+                    </div>
+                    <h4 class="mb-0 fw-bold">Sign In to SecurePay</h4>
+                    <p class="text-white-50 small mb-0 mt-1">Access your secure digital wallet</p>
                 </div>
-                <div class="card-body p-4">
+
+                <div class="card-body p-4 p-md-5">
                     <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next', '')) }}">
                         <!-- Username or Email -->
                         <div class="mb-3">
-                            <label for="username_or_email" class="form-label fw-semibold">Username or Email</label>
+                            <label for="username_or_email" class="form-label small fw-semibold text-muted text-uppercase">Username or Email</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-person text-muted"></i></span>
                                 <input type="text" class="form-control" id="username_or_email" name="username_or_email"
                                        value="{{ username_or_email or '' }}" placeholder="Enter username or email" required autofocus>
                             </div>
@@ -27,9 +29,9 @@
 
                         <!-- Password -->
                         <div class="mb-4">
-                            <label for="password" class="form-label fw-semibold">Password</label>
+                            <label for="password" class="form-label small fw-semibold text-muted text-uppercase">Password</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-key text-muted"></i></span>
                                 <input type="password" class="form-control" id="password" name="password"
                                        placeholder="Enter your password" required>
                             </div>
@@ -37,31 +39,52 @@
 
                         <!-- Submit Button -->
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm py-3">
                                 <i class="bi bi-shield-lock me-1"></i> Sign In
                             </button>
                         </div>
                     </form>
 
-                    <hr class="my-3">
-
-                    <div class="text-center">
-                        <span class="text-muted">Don't have an account?</span>
-                        <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-semibold ms-1">Register here</a>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <span class="text-muted small">Don't have an account?</span>
+                        <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-semibold small ms-1 text-primary">Create one now</a>
                     </div>
                 </div>
             </div>
 
             <!-- Demo Credentials Helper Box -->
-            <div class="card bg-light border-0 mt-4 shadow-sm">
-                <div class="card-body p-3">
-                    <h6 class="fw-bold mb-2 text-secondary"><i class="bi bi-info-circle me-1"></i> Development Demo Credentials:</h6>
-                    <ul class="list-unstyled mb-0 small text-muted">
-                        <li><strong>Admin:</strong> <code>admin</code> / <code>admin123</code></li>
-                        <li><strong>User 1:</strong> <code>john</code> / <code>password123</code> (Active, ₹10,000 balance)</li>
-                        <li><strong>User 2:</strong> <code>jane</code> / <code>password123</code> (Active, ₹5,000 balance)</li>
-                        <li><strong>Locked User:</strong> <code>bob</code> / <code>password123</code> (Suspended/Locked)</li>
-                    </ul>
+            <div class="card bg-white border mt-4 shadow-sm" style="border-radius: 1rem;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-key-fill text-warning"></i>
+                        <h6 class="fw-bold mb-0 text-dark small text-uppercase">Demo Credentials</h6>
+                    </div>
+                    <div class="row g-2 small">
+                        <div class="col-6">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block text-muted" style="font-size: 0.75rem;">Admin</span>
+                                <code>admin</code> / <code>admin123</code>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block text-muted" style="font-size: 0.75rem;">User (₹10k)</span>
+                                <code>john</code> / <code>password123</code>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block text-muted" style="font-size: 0.75rem;">User (₹5k)</span>
+                                <code>jane</code> / <code>password123</code>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block text-muted" style="font-size: 0.75rem;">Locked User</span>
+                                <code>bob</code> / <code>password123</code>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

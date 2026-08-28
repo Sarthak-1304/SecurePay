@@ -5,21 +5,23 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white text-center py-3">
-                    <h4 class="mb-0 fw-bold">
-                        <i class="bi bi-person-plus-fill me-2"></i>Create an Account
-                    </h4>
-                    <p class="text-white-50 small mb-0 mt-1">Get your digital wallet in seconds</p>
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg border-0" style="border-radius: 1.25rem;">
+                <div class="card-header bg-dark text-white text-center py-4 border-0" style="border-top-left-radius: 1.25rem; border-top-right-radius: 1.25rem;">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-gradient rounded-3 text-white shadow-sm mb-2" style="width: 44px; height: 44px;">
+                        <i class="bi bi-person-plus-fill fs-4"></i>
+                    </div>
+                    <h4 class="mb-0 fw-bold">Create an Account</h4>
+                    <p class="text-white-50 small mb-0 mt-1">Instant atomic wallet provisioning</p>
                 </div>
-                <div class="card-body p-4">
+
+                <div class="card-body p-4 p-md-5">
                     <form method="POST" action="{{ url_for('auth.register') }}">
                         <!-- Full Name -->
                         <div class="mb-3">
-                            <label for="full_name" class="form-label fw-semibold">Full Name</label>
+                            <label for="full_name" class="form-label small fw-semibold text-muted text-uppercase">Full Name</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-person text-muted"></i></span>
                                 <input type="text" class="form-control" id="full_name" name="full_name"
                                        value="{{ full_name or '' }}" placeholder="e.g. John Doe" required autofocus>
                             </div>
@@ -27,20 +29,20 @@
 
                         <!-- Username -->
                         <div class="mb-3">
-                            <label for="username" class="form-label fw-semibold">Username</label>
+                            <label for="username" class="form-label small fw-semibold text-muted text-uppercase">Username</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-at"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-at text-muted"></i></span>
                                 <input type="text" class="form-control" id="username" name="username"
                                        value="{{ username or '' }}" placeholder="e.g. johndoe" required>
                             </div>
-                            <div class="form-text">3-30 characters (letters, numbers, <code>_</code> or <code>-</code>, no spaces).</div>
+                            <div class="form-text small">3-30 characters (letters, numbers, <code>_</code> or <code>-</code>).</div>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">Email Address</label>
+                            <label for="email" class="form-label small fw-semibold text-muted text-uppercase">Email Address</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-envelope text-muted"></i></span>
                                 <input type="email" class="form-control" id="email" name="email"
                                        value="{{ email or '' }}" placeholder="name@example.com" required>
                             </div>
@@ -48,9 +50,9 @@
 
                         <!-- Password -->
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-semibold">Password</label>
+                            <label for="password" class="form-label small fw-semibold text-muted text-uppercase">Password</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-key text-muted"></i></span>
                                 <input type="password" class="form-control" id="password" name="password"
                                        placeholder="Minimum 8 characters" required minlength="8">
                             </div>
@@ -58,9 +60,9 @@
 
                         <!-- Confirm Password -->
                         <div class="mb-4">
-                            <label for="confirm_password" class="form-label fw-semibold">Confirm Password</label>
+                            <label for="confirm_password" class="form-label small fw-semibold text-muted text-uppercase">Confirm Password</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
+                                <span class="input-group-text bg-light"><i class="bi bi-shield-check text-muted"></i></span>
                                 <input type="password" class="form-control" id="confirm_password" name="confirm_password"
                                        placeholder="Re-enter password" required minlength="8">
                             </div>
@@ -68,17 +70,15 @@
 
                         <!-- Submit Button -->
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                                <i class="bi bi-check-circle me-1"></i> Register & Create Wallet
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm py-3">
+                                <i class="bi bi-check-circle me-1"></i> Register & Provision Wallet
                             </button>
                         </div>
                     </form>
 
-                    <hr class="my-3">
-
-                    <div class="text-center">
-                        <span class="text-muted">Already have an account?</span>
-                        <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-semibold ms-1">Login here</a>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <span class="text-muted small">Already have an account?</span>
+                        <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-semibold small ms-1 text-primary">Login here</a>
                     </div>
                 </div>
             </div>

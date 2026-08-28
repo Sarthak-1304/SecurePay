@@ -1,132 +1,203 @@
-{#
-  home.html — Landing page
-
-  This template EXTENDS base.html:
-  - It inherits the navbar, footer, Bootstrap CSS, and flash messages
-  - It only needs to fill in the "block content" section
-#}
 {% extends "base.html" %}
 
-{% block title %}SecurePay — Mini Digital Wallet{% endblock %}
+{% block title %}SecurePay — Concurrency-Hardened Digital Wallet Engine{% endblock %}
 
 {% block content %}
-
 <!-- ========== HERO SECTION ========== -->
-<section class="hero-section text-center text-white py-5">
-    <div class="container py-5">
-        <h1 class="display-4 fw-bold mb-3">
-            <i class="bi bi-shield-lock-fill"></i> SecurePay
-        </h1>
-        <p class="lead">Your secure mini digital wallet</p>
-        <p class="text-white-50 mb-4">Deposit &bull; Withdraw &bull; Transfer &bull; Track</p>
-        <div class="mt-4">
-            {% if session.get('user_id') %}
-                <div class="d-inline-block p-3 rounded bg-dark bg-opacity-50 text-white mb-2">
-                    <span class="fs-5">Logged in as <strong>{{ session.get('full_name') }}</strong> (<code>@{{ session.get('username') }}</code>)</span>
+<section class="hero-gradient text-white py-5 py-lg-6 position-relative">
+    <div class="hero-glow"></div>
+    <div class="container py-4 py-lg-5 position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 text-center text-lg-start">
+                <div class="hero-badge mb-3">
+                    <i class="bi bi-cpu-fill text-warning"></i>
+                    <span>ACID Engine &bull; Pessimistic Row Locking &bull; 0% Double-Spend</span>
                 </div>
-            {% else %}
-                <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg me-2 shadow">
-                    <i class="bi bi-person-plus-fill"></i> Register Now
-                </a>
-                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Sign In
-                </a>
-            {% endif %}
+                <h1 class="display-4 fw-extrabold mb-3 tracking-tight">
+                    Next-Generation <br><span class="text-primary-emphasis" style="color: #818cf8 !important;">Digital Wallet Simulation</span>
+                </h1>
+                <p class="lead text-white-50 mb-4 pe-lg-4" style="font-size: 1.15rem; line-height: 1.6;">
+                    An educational backend architecture demonstrating atomic financial transactions, deadlock prevention via deterministic lock ordering, and role-based access control.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('wallet.dashboard') }}" class="btn btn-primary btn-lg shadow-lg">
+                            <i class="bi bi-wallet2 me-2"></i> Go to Wallet Dashboard
+                        </a>
+                        <a href="{{ url_for('wallet.transfer') }}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-arrow-left-right me-2"></i> Send Money
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg shadow-lg px-4">
+                            <i class="bi bi-person-plus-fill me-2"></i> Create Free Account
+                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg px-4">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Quick Tech Highlights -->
+                <div class="d-flex flex-wrap gap-4 mt-5 pt-3 border-top border-secondary border-opacity-25 text-white-50 small">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-shield-check text-success fs-5"></i>
+                        <span>scrypt Hashed Passwords</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-lock-fill text-info fs-5"></i>
+                        <span>SELECT ... FOR UPDATE</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-database-check text-warning fs-5"></i>
+                        <span>DECIMAL(15,2) Precision</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Virtual Card Visual Showcase -->
+            <div class="col-lg-5">
+                <div class="virtual-debit-card shadow-2xl">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-25 px-3 py-1 mb-2">SECUREPAY PREMIUM</span>
+                            <div class="text-white-50 small font-monospace">ACC-DEMO-00001</div>
+                        </div>
+                        <i class="bi bi-wifi fs-4 text-white-50"></i>
+                    </div>
+
+                    <div class="chip-icon mb-4"></div>
+
+                    <div class="mb-4">
+                        <small class="text-white-50 text-uppercase d-block mb-1 font-monospace" style="font-size: 0.7rem; letter-spacing: 0.1em;">Simulated Available Balance</small>
+                        <h2 class="fw-bold tracking-tight text-white mb-0">₹24,500.00</h2>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-end pt-2 border-top border-white border-opacity-10">
+                        <div>
+                            <small class="text-white-50 d-block" style="font-size: 0.65rem;">CARD HOLDER</small>
+                            <span class="fw-semibold text-white font-monospace">JOHN DOE</span>
+                        </div>
+                        <div>
+                            <small class="text-white-50 d-block" style="font-size: 0.65rem;">EXPIRES</small>
+                            <span class="fw-semibold text-white font-monospace">12/28</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ========== FEATURE CARDS ========== -->
-<section class="container py-5">
-    <h2 class="text-center mb-4">Why SecurePay?</h2>
-    <div class="row g-4">
+<!-- ========== ARCHITECTURE HIGHLIGHTS ========== -->
+<section class="py-5 bg-white border-bottom border-secondary border-opacity-10">
+    <div class="container py-4">
+        <div class="text-center max-w-2xl mx-auto mb-5">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 mb-2">ENGINEERING PRINCIPLES</span>
+            <h2 class="fw-bold text-dark mb-2">Why SecurePay's Backend is Resilient</h2>
+            <p class="text-muted">Designed from first principles without ORM abstraction to guarantee strict database invariants.</p>
+        </div>
 
-        <!-- Card 1: Security -->
-        <div class="col-md-4">
-            <div class="card h-100 text-center border-0 shadow-sm">
-                <div class="card-body py-4">
-                    <div class="feature-icon mb-3">
-                        <i class="bi bi-lock-fill text-primary display-4"></i>
+        <div class="row g-4">
+            <!-- Card 1: Atomicity -->
+            <div class="col-md-4">
+                <div class="card h-100 p-4 border-0 shadow-sm card-hover">
+                    <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-4 d-inline-flex align-items-center justify-content-center mb-4" style="width: 56px; height: 56px;">
+                        <i class="bi bi-shield-shaded fs-3"></i>
                     </div>
-                    <h5 class="card-title">Secure</h5>
-                    <p class="card-text text-muted">
-                        Password hashing, session-based auth, and automatic
-                        account locking after failed attempts.
+                    <h5 class="fw-bold text-dark mb-2">Pessimistic Row Locking</h5>
+                    <p class="text-muted small mb-0">
+                        Uses <code>SELECT ... FOR UPDATE</code> during balance changes, serializing concurrent requests and eliminating double-spending race conditions.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 2: Transfers -->
+            <div class="col-md-4">
+                <div class="card h-100 p-4 border-0 shadow-sm card-hover">
+                    <div class="p-3 bg-success bg-opacity-10 text-success rounded-4 d-inline-flex align-items-center justify-content-center mb-4" style="width: 56px; height: 56px;">
+                        <i class="bi bi-arrow-left-right fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Deadlock Prevention</h5>
+                    <p class="text-muted small mb-0">
+                        Sorts account IDs before acquiring exclusive locks during P2P transfers, mathematically eliminating circular wait deadlocks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: Compliance & Audit -->
+            <div class="col-md-4">
+                <div class="card h-100 p-4 border-0 shadow-sm card-hover">
+                    <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-4 d-inline-flex align-items-center justify-content-center mb-4" style="width: 56px; height: 56px;">
+                        <i class="bi bi-journal-check fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Compliance Audit Trail</h5>
+                    <p class="text-muted small mb-0">
+                        Tracks every login attempt, account lockout, transfer, and admin action with client IP resolution and credential sanitization.
                     </p>
                 </div>
             </div>
         </div>
-
-        <!-- Card 2: Transfers -->
-        <div class="col-md-4">
-            <div class="card h-100 text-center border-0 shadow-sm">
-                <div class="card-body py-4">
-                    <div class="feature-icon mb-3">
-                        <i class="bi bi-arrow-left-right text-success display-4"></i>
-                    </div>
-                    <h5 class="card-title">Transfer</h5>
-                    <p class="card-text text-muted">
-                        Send money to other users instantly with atomic
-                        SQL transactions ensuring data integrity.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3: History -->
-        <div class="col-md-4">
-            <div class="card h-100 text-center border-0 shadow-sm">
-                <div class="card-body py-4">
-                    <div class="feature-icon mb-3">
-                        <i class="bi bi-clock-history text-warning display-4"></i>
-                    </div>
-                    <h5 class="card-title">Track</h5>
-                    <p class="card-text text-muted">
-                        Full transaction history with filters, pagination,
-                        and a complete audit trail.
-                    </p>
-                </div>
-            </div>
-        </div>
-
     </div>
 </section>
 
-<!-- ========== HOW IT WORKS ========== -->
-<section class="bg-light py-5">
+<!-- ========== PRE-SEEDED TEST CREDENTIALS CALLOUT ========== -->
+<section class="py-5 bg-light">
     <div class="container">
-        <h2 class="text-center mb-4">How It Works</h2>
-        <div class="row text-center g-4">
-            <div class="col-md-3">
-                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
-                    <span class="fw-bold fs-4">1</span>
+        <div class="card border-0 shadow-sm p-4 p-lg-5" style="border-radius: 1.25rem;">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-6">
+                    <span class="badge bg-secondary-subtle text-secondary border px-3 py-1 mb-2">TEST ENVIRONMENT READY</span>
+                    <h3 class="fw-bold text-dark mb-2">Ready to explore the demo?</h3>
+                    <p class="text-muted mb-4">
+                        The application is pre-seeded with test accounts for immediate evaluation across User, Admin, and Locked account states.
+                    </p>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Demo Accounts
+                    </a>
                 </div>
-                <h6>Register</h6>
-                <p class="text-muted small">Create your account in seconds</p>
-            </div>
-            <div class="col-md-3">
-                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
-                    <span class="fw-bold fs-4">2</span>
+                <div class="col-lg-6">
+                    <div class="table-responsive rounded-3 border bg-white">
+                        <table class="table table-sm table-hover align-middle mb-0 small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Role</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Initial State</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-3"><span class="badge bg-warning text-dark">Admin</span></td>
+                                    <td><code>admin</code></td>
+                                    <td><code>admin123</code></td>
+                                    <td><span class="badge bg-success-subtle text-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3"><span class="badge bg-primary-subtle text-primary">User</span></td>
+                                    <td><code>john</code></td>
+                                    <td><code>password123</code></td>
+                                    <td><span class="badge bg-success-subtle text-success">Active (₹10k)</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3"><span class="badge bg-primary-subtle text-primary">User</span></td>
+                                    <td><code>jane</code></td>
+                                    <td><code>password123</code></td>
+                                    <td><span class="badge bg-success-subtle text-success">Active (₹5k)</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-3"><span class="badge bg-danger-subtle text-danger">Locked</span></td>
+                                    <td><code>bob</code></td>
+                                    <td><code>password123</code></td>
+                                    <td><span class="badge bg-danger-subtle text-danger">Suspended</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <h6>Deposit</h6>
-                <p class="text-muted small">Add funds to your wallet</p>
-            </div>
-            <div class="col-md-3">
-                <div class="rounded-circle bg-info text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
-                    <span class="fw-bold fs-4">3</span>
-                </div>
-                <h6>Transfer</h6>
-                <p class="text-muted small">Send money to other users</p>
-            </div>
-            <div class="col-md-3">
-                <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center mb-3" style="width:60px; height:60px;">
-                    <span class="fw-bold fs-4">4</span>
-                </div>
-                <h6>Track</h6>
-                <p class="text-muted small">View your full history</p>
             </div>
         </div>
     </div>
 </section>
-
 {% endblock %}
