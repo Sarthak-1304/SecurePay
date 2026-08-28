@@ -10,58 +10,146 @@
             <h2 class="fw-bold mb-1">
                 <i class="bi bi-shield-shaded text-warning me-2"></i>Administrator Control Panel
             </h2>
-            <p class="text-muted mb-0">System-wide monitoring, security audit trails, and platform statistics</p>
+            <p class="text-muted mb-0">System-wide monitoring, security audit trails, and user management</p>
         </div>
-        <div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary shadow-sm">
+                <i class="bi bi-people me-1"></i> User Directory
+            </a>
+            <a href="{{ url_for('admin.transactions') }}" class="btn btn-outline-info shadow-sm">
+                <i class="bi bi-cash-stack me-1"></i> All Transactions
+            </a>
             <a href="{{ url_for('admin.audit_logs') }}" class="btn btn-primary shadow-sm">
-                <i class="bi bi-journal-text me-1"></i> View Full Audit Log
+                <i class="bi bi-journal-text me-1"></i> Audit Logs
             </a>
         </div>
     </div>
 
-    <!-- Platform Metrics Cards -->
+    <!-- Platform Metrics Cards (Clickable) -->
     <div class="row g-3 mb-4">
         <!-- Total Users -->
         <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm text-center p-3 h-100">
-                <div class="text-primary display-6 mb-1"><i class="bi bi-people-fill"></i></div>
-                <span class="text-muted small text-uppercase fw-semibold">Active Users</span>
-                <h3 class="fw-bold my-1 text-dark">{{ total_users }}</h3>
-            </div>
+            <a href="{{ url_for('admin.users') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm text-center p-3 h-100 card-hover">
+                    <div class="text-primary display-6 mb-1"><i class="bi bi-people-fill"></i></div>
+                    <span class="text-muted small text-uppercase fw-semibold">Active Users</span>
+                    <h3 class="fw-bold my-1 text-dark">{{ total_users }}</h3>
+                    <small class="text-primary">Manage users &rarr;</small>
+                </div>
+            </a>
         </div>
 
         <!-- Locked Users -->
         <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm text-center p-3 h-100">
-                <div class="text-danger display-6 mb-1"><i class="bi bi-lock-fill"></i></div>
-                <span class="text-muted small text-uppercase fw-semibold">Locked Accounts</span>
-                <h3 class="fw-bold my-1 text-danger">{{ locked_users }}</h3>
-            </div>
+            <a href="{{ url_for('admin.users', status='locked') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm text-center p-3 h-100 card-hover">
+                    <div class="text-danger display-6 mb-1"><i class="bi bi-lock-fill"></i></div>
+                    <span class="text-muted small text-uppercase fw-semibold">Locked Accounts</span>
+                    <h3 class="fw-bold my-1 text-danger">{{ locked_users }}</h3>
+                    <small class="text-danger">Review lockouts &rarr;</small>
+                </div>
+            </a>
         </div>
 
         <!-- Total System Funds -->
         <div class="col-md-3 col-sm-6">
             <div class="card border-0 shadow-sm text-center p-3 h-100">
                 <div class="text-success display-6 mb-1"><i class="bi bi-cash-coin"></i></div>
-                <span class="text-muted small text-uppercase fw-semibold">System Deposits Total</span>
+                <span class="text-muted small text-uppercase fw-semibold">Total System Balance</span>
                 <h3 class="fw-bold my-1 text-success">₹{{ "{:,.2f}".format(total_balance) }}</h3>
+                <small class="text-muted">Total user funds</small>
             </div>
         </div>
 
         <!-- Total Successful Transactions -->
         <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm text-center p-3 h-100">
-                <div class="text-info display-6 mb-1"><i class="bi bi-arrow-left-right"></i></div>
-                <span class="text-muted small text-uppercase fw-semibold">Processed Ledger Txns</span>
-                <h3 class="fw-bold my-1 text-dark">{{ total_txns }}</h3>
+            <a href="{{ url_for('admin.transactions') }}" class="text-decoration-none">
+                <div class="card border-0 shadow-sm text-center p-3 h-100 card-hover">
+                    <div class="text-info display-6 mb-1"><i class="bi bi-arrow-left-right"></i></div>
+                    <span class="text-muted small text-uppercase fw-semibold">Processed Ledger Txns</span>
+                    <h3 class="fw-bold my-1 text-dark">{{ total_txns }}</h3>
+                    <small class="text-info">Monitor ledger &rarr;</small>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Navigation Cards Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Card 1: User Management -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 0.75rem;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-3 me-3">
+                            <i class="bi bi-person-gear fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">User Directory</h5>
+                            <small class="text-muted">Status & Lock Control</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-3">
+                        Inspect all registered user profiles, view account balances, and unlock accounts that exceeded failed login attempts.
+                    </p>
+                    <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary btn-sm w-100">
+                        Open User Directory <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Global Transactions -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 0.75rem;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="p-3 bg-info bg-opacity-10 text-info rounded-3 me-3">
+                            <i class="bi bi-receipt fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Global Ledger</h5>
+                            <small class="text-muted">Platform Activities</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-3">
+                        Real-time oversight of all incoming deposits, outgoing withdrawals, and peer-to-peer money transfers with counterparty tracking.
+                    </p>
+                    <a href="{{ url_for('admin.transactions') }}" class="btn btn-outline-info btn-sm w-100">
+                        View All Transactions <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Security Audit Log -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 0.75rem;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-3 me-3">
+                            <i class="bi bi-shield-check fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Audit Trail</h5>
+                            <small class="text-muted">Compliance & Security</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-3">
+                        Search and filter immutable compliance event logs including login successes, wrong password attempts, account lockouts, and admin actions.
+                    </p>
+                    <a href="{{ url_for('admin.audit_logs') }}" class="btn btn-outline-warning btn-sm w-100">
+                        View Security Logs <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Audit Logs Section -->
+    <!-- Recent Audit Logs Table Section -->
     <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
         <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0"><i class="bi bi-activity me-2 text-warning"></i>Recent System Security Events</h5>
+            <h5 class="fw-bold mb-0"><i class="bi bi-activity me-2 text-warning"></i>Recent Platform Security Events</h5>
             <a href="{{ url_for('admin.audit_logs') }}" class="btn btn-sm btn-outline-secondary">
                 View All Events <i class="bi bi-arrow-right ms-1"></i>
             </a>
@@ -73,7 +161,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="ps-4">Action</th>
-                                <th>User</th>
+                                <th>Actor / User</th>
                                 <th>Details</th>
                                 <th>IP Address</th>
                                 <th class="text-end pe-4">Timestamp</th>
@@ -83,7 +171,7 @@
                             {% for log in recent_logs %}
                                 <tr>
                                     <td class="ps-4">
-                                        {% if 'LOGIN_SUCCESS' in log.action or 'REGISTER' in log.action %}
+                                        {% if 'LOGIN_SUCCESS' in log.action or 'REGISTER' in log.action or 'UNLOCKED' in log.action %}
                                             <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">{{ log.action }}</span>
                                         {% elif 'FAIL' in log.action or 'LOCK' in log.action or 'BLOCKED' in log.action %}
                                             <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">{{ log.action }}</span>
