@@ -29,6 +29,16 @@ def query_db(query, params=(), one=False):
     return result
 
 
+def execute_db(query, params=()):
+    """Helper to execute modification query."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
 def run_wallet_tests():
     print("=" * 60)
     print("  RUNNING SECUREPAY PHASE 4 WALLET & TRANSACTION TESTS")
@@ -164,6 +174,7 @@ def run_wallet_tests():
     # TEST 7: Successful Withdrawal
     # -------------------------------------------------------------
     print("\n[TEST 7] Testing Successful Withdrawal...")
+    execute_db("UPDATE accounts SET daily_limit = 500000.00 WHERE user_id = 2")
     withdraw_amount = Decimal('750.25')
     with client:
         bal_before_w = Decimal(str(query_db("SELECT balance FROM accounts WHERE user_id = 2", one=True)['balance']))

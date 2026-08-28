@@ -323,19 +323,19 @@ def withdraw():
             account_id = locked_account['id']
             current_balance = Decimal(str(locked_account['balance']))
 
-            # 3. Check Daily Limit
+            # 3. Check sufficient balance
+            if current_balance < amount:
+                conn.rollback()
+                flash(f"Insufficient funds! Your available balance is ₹{current_balance:,.2f}, but you requested ₹{amount:,.2f}.", "danger")
+                return render_template('wallet/withdraw.html', account=locked_account)
+
+            # 4. Check Daily Limit
             daily_spent = get_daily_spent(cursor, account_id)
             daily_limit = Decimal(str(locked_account['daily_limit']))
             if daily_spent + amount > daily_limit:
                 conn.rollback()
                 remaining = max(Decimal('0.00'), daily_limit - daily_spent)
                 flash(f"Daily transaction limit exceeded! You have spent ₹{daily_spent:,.2f} of your ₹{daily_limit:,.2f} limit today. Remaining allowance: ₹{remaining:,.2f}.", "danger")
-                return render_template('wallet/withdraw.html', account=locked_account)
-
-            # 4. Check sufficient balance
-            if current_balance < amount:
-                conn.rollback()
-                flash(f"Insufficient funds! Your available balance is ₹{current_balance:,.2f}, but you requested ₹{amount:,.2f}.", "danger")
                 return render_template('wallet/withdraw.html', account=locked_account)
 
             # 5. Deduct balance
@@ -518,7 +518,18 @@ def transfer():
                 flash("Recipient account is not active. Transfer cancelled.", "danger")
                 return redirect(url_for('wallet.transfer'))
 
-            # 6. Verify Daily Transaction Limit
+            # 6. Verify Sufficient Balance
+            sender_current_balance = Decimal(str(locked_sender['balance']))
+            if sender_current_balance < amount:
+                conn.rollback()
+                flash(f"Insufficient balance! Available: ₹{sender_current_balance:,.2f}, Requested: ₹{amount:,.2f}.", "danger")
+                return render_template('wallet/transfer.html',
+                                       account=locked_sender,
+                                       daily_spent=sender_daily_spent,
+                                       remaining_limit=max(Decimal('0.00'), sender_daily_limit - sender_daily_spent),
+                                       recipient=recipient_input)
+
+            # 7. Verify Daily Transaction Limit
             sender_daily_spent = get_daily_spent(cursor, sender_acc_id)
             sender_daily_limit = Decimal(str(locked_sender['daily_limit']))
             if sender_daily_spent + amount > sender_daily_limit:
@@ -529,17 +540,6 @@ def transfer():
                                        account=locked_sender,
                                        daily_spent=sender_daily_spent,
                                        remaining_limit=allowed,
-                                       recipient=recipient_input)
-
-            # 7. Verify Sufficient Balance
-            sender_current_balance = Decimal(str(locked_sender['balance']))
-            if sender_current_balance < amount:
-                conn.rollback()
-                flash(f"Insufficient balance! Available: ₹{sender_current_balance:,.2f}, Requested: ₹{amount:,.2f}.", "danger")
-                return render_template('wallet/transfer.html',
-                                       account=locked_sender,
-                                       daily_spent=sender_daily_spent,
-                                       remaining_limit=max(Decimal('0.00'), sender_daily_limit - sender_daily_spent),
                                        recipient=recipient_input)
 
             # 8. Deduct from Sender

@@ -33,6 +33,16 @@ def query_db(query, params=(), one=False):
     return result
 
 
+def execute_db(query, params=()):
+    """Helper to execute modification query."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
 def run_transfer_tests():
     print("=" * 60)
     print("  RUNNING SECUREPAY PHASE 5 P2P TRANSFER & LEDGER TESTS")
@@ -122,6 +132,7 @@ def run_transfer_tests():
 
     with client:
         client.post('/login', data={'username_or_email': 'john', 'password': 'password123'})
+        execute_db("UPDATE accounts SET daily_limit = 500000.00 WHERE user_id = 2")
         curr_bal_row = query_db("SELECT balance FROM accounts WHERE user_id = 2", one=True)
         if Decimal(str(curr_bal_row['balance'])) < transfer_amount + Decimal('500.00'):
             client.post('/deposit', data={'amount': '3000.00', 'description': 'Topup for transfer test'})
@@ -201,11 +212,6 @@ def run_transfer_tests():
     # -------------------------------------------------------------
     print("\n[TEST 7] Testing Daily Spending Limit Enforcement...")
     with client:
-        # Check John's remaining limit
-        john_limit_row = query_db("SELECT daily_limit FROM accounts WHERE user_id = 2", one=True)
-        john_daily_limit = Decimal(str(john_limit_row['daily_limit']))
-
-        # Calculate current spent today
         spent_row = query_db(
             """SELECT COALESCE(SUM(amount), 0) AS total
                FROM transactions
@@ -213,7 +219,10 @@ def run_transfer_tests():
             one=True
         )
         total_spent = Decimal(str(spent_row['total']))
-        excess_amount = (john_daily_limit - total_spent) + Decimal('100.00')
+        test_limit = total_spent + Decimal('50.00')
+        execute_db("UPDATE accounts SET daily_limit = %s WHERE user_id = 2", (test_limit,))
+
+        excess_amount = Decimal('100.00')
 
         res_limit = client.post('/transfer', data={
             'recipient': 'jane',
@@ -221,7 +230,10 @@ def run_transfer_tests():
             'description': 'Exceeding limit test'
         }, follow_redirects=True)
         assert b"limit exceeded" in res_limit.data
-        print(f"  --> PASS: Outgoing transfer of INR {excess_amount:,.2f} exceeding daily limit (INR {john_daily_limit:,.2f}) rejected.")
+        print(f"  --> PASS: Outgoing transfer of INR {excess_amount:,.2f} exceeding daily limit (INR {test_limit:,.2f}) rejected.")
+
+        # Restore default daily limit
+        execute_db("UPDATE accounts SET daily_limit = 50000.00 WHERE user_id = 2")
 
     # -------------------------------------------------------------
     # TEST 8: Transaction History & Filtering

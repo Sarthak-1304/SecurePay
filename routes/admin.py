@@ -202,6 +202,11 @@ def toggle_lock(user_id):
                    WHERE user_id = %s""",
                 (user_id,)
             )
+            # Resolve any pending unlock requests for this user
+            cursor.execute(
+                "UPDATE audit_logs SET action = 'UNLOCK_REQUEST_RESOLVED' WHERE user_id = %s AND action = 'UNLOCK_REQUEST'",
+                (user_id,)
+            )
             conn.commit()
 
             # Record audit log
@@ -235,12 +240,72 @@ def toggle_lock(user_id):
             )
             flash(f"User '{target_user['username']}' has been locked and their wallet suspended.", "warning")
 
+        # Redirect back to referring page or users directory
+        referrer = request.referrer
+        if referrer and 'admin/dashboard' in referrer:
+            return redirect(url_for('admin.dashboard'))
         return redirect(url_for('admin.users'))
 
     except Exception as e:
         conn.rollback()
         flash("An error occurred while modifying account lock status.", "danger")
         return redirect(url_for('admin.users'))
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@admin_bp.route('/unlock-requests/<int:log_id>/reject', methods=['POST'])
+@admin_required
+def reject_unlock(log_id):
+    """
+    Reject an Account Unlock Request:
+    - Allows the admin to reject an unlock appeal and attach a custom reason/message.
+    - Records an UNLOCK_REJECTED event with the custom message in the audit ledger.
+    - Marks the pending request resolved so it clears from the dashboard attention queue.
+    """
+    rejection_reason = request.form.get('reason', '').strip()[:255] or "Request reviewed and rejected by administrator."
+    current_admin_id = session.get('user_id')
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True, buffered=True)
+
+    try:
+        # Fetch the unlock request log
+        cursor.execute(
+            """SELECT al.id, al.user_id, u.username
+               FROM audit_logs al
+               JOIN users u ON al.user_id = u.id
+               WHERE al.id = %s AND al.action = 'UNLOCK_REQUEST'""",
+            (log_id,)
+        )
+        req = cursor.fetchone()
+
+        if not req:
+            flash("Unlock request not found or already processed.", "warning")
+            return redirect(url_for('admin.dashboard'))
+
+        # 1. Update the original request action to UNLOCK_REQUEST_REJECTED
+        cursor.execute(
+            "UPDATE audit_logs SET action = 'UNLOCK_REQUEST_REJECTED' WHERE id = %s",
+            (log_id,)
+        )
+
+        # 2. Insert new audit log for the rejection with custom admin message
+        log_audit_event(
+            current_admin_id,
+            'UNLOCK_REJECTED',
+            f"Admin rejected unlock for '@{req['username']}': {rejection_reason}"
+        )
+        conn.commit()
+
+        flash(f"Unlock request for '@{req['username']}' rejected with note: '{rejection_reason}'", "info")
+        return redirect(url_for('admin.dashboard'))
+
+    except Exception as e:
+        conn.rollback()
+        flash("An error occurred while rejecting the unlock request.", "danger")
+        return redirect(url_for('admin.dashboard'))
     finally:
         cursor.close()
         conn.close()

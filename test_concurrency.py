@@ -31,6 +31,16 @@ def query_db(query, params=(), one=False):
     return result
 
 
+def execute_db(query, params=()):
+    """Helper to execute modification query."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
 def execute_transfer(sender_username, password, recipient, amount, results, index):
     """Thread worker that logs in and executes a P2P transfer."""
     with app.test_client() as client:
@@ -43,7 +53,7 @@ def execute_transfer(sender_username, password, recipient, amount, results, inde
         results[index] = {
             'status_code': res.status_code,
             'success': b"Successfully transferred" in res.data,
-            'insufficient': b"Insufficient funds" in res.data or b"limit exceeded" in res.data or b"exceeds" in res.data
+            'insufficient': b"Insufficient" in res.data or b"limit exceeded" in res.data or b"exceeds" in res.data
         }
 
 
@@ -56,16 +66,26 @@ def run_concurrency_tests():
     # TEST 1: Simultaneous Double-Spend Prevention
     # -------------------------------------------------------------
     print("\n[TEST 1] Testing Simultaneous Double-Spend Prevention (Row Locking)...")
-    # Calculate John's remaining limit & balance
+    # Ensure sufficient daily limit for test run
+    execute_db("UPDATE accounts SET daily_limit = 500000.00 WHERE user_id IN (2, 3)")
+
     john_acc = query_db("SELECT id, balance FROM accounts WHERE user_id = 2", one=True)
     initial_john_bal = Decimal(str(john_acc['balance']))
+
+    # If John's balance is below 1,000, top it up
+    if initial_john_bal < Decimal('1000.00'):
+        with app.test_client() as topup_c:
+            topup_c.post('/login', data={'username_or_email': 'john', 'password': 'password123'})
+            topup_c.post('/deposit', data={'amount': '2000.00', 'description': 'Topup for concurrency'})
+        john_acc = query_db("SELECT id, balance FROM accounts WHERE user_id = 2", one=True)
+        initial_john_bal = Decimal(str(john_acc['balance']))
 
     spent_row = query_db(
         "SELECT COALESCE(SUM(amount), 0) AS total FROM transactions WHERE from_account_id = 2 AND status = 'success' AND DATE(created_at) = CURDATE()",
         one=True
     )
     daily_spent = Decimal(str(spent_row['total']))
-    remaining_limit = max(Decimal('0.00'), Decimal('50000.00') - daily_spent)
+    remaining_limit = max(Decimal('0.00'), Decimal('500000.00') - daily_spent)
 
     available_capacity = min(initial_john_bal, remaining_limit)
     # Each thread will ask for (available_capacity * 0.6)
