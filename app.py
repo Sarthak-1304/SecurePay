@@ -39,8 +39,10 @@ app.config.from_object(Config)
 # Register Blueprints
 from routes.auth import auth_bp
 from routes.wallet import wallet_bp
+from routes.admin import admin_bp
 app.register_blueprint(auth_bp)
 app.register_blueprint(wallet_bp)
+app.register_blueprint(admin_bp)
 
 
 

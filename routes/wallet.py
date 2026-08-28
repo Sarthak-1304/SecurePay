@@ -623,6 +623,9 @@ def history():
 
     account_id = account['id']
     filter_type = request.args.get('type', 'all').lower()
+    filter_status = request.args.get('status', 'all').lower()
+    date_from = request.args.get('date_from', '').strip()
+    date_to = request.args.get('date_to', '').strip()
     search_query = request.args.get('q', '').strip()
 
     try:
@@ -649,6 +652,18 @@ def history():
             sql += " AND t.transaction_type = %s"
             params.append(filter_type)
 
+        if filter_status in ['success', 'failed']:
+            sql += " AND t.status = %s"
+            params.append(filter_status)
+
+        if date_from:
+            sql += " AND DATE(t.created_at) >= %s"
+            params.append(date_from)
+
+        if date_to:
+            sql += " AND DATE(t.created_at) <= %s"
+            params.append(date_to)
+
         if search_query:
             sql += """ AND (t.description LIKE %s OR t.transaction_ref LIKE %s
                             OR u_from.username LIKE %s OR u_to.username LIKE %s)"""
@@ -665,6 +680,9 @@ def history():
             account=account,
             transactions=transactions,
             filter_type=filter_type,
+            filter_status=filter_status,
+            date_from=date_from,
+            date_to=date_to,
             search_query=search_query
         )
 

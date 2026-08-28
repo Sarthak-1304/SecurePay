@@ -80,8 +80,14 @@
                             </a>
                         </li>
                         {% if session.get('role') == 'admin' %}
-                            <li class="nav-item">
-                                <span class="badge bg-warning text-dark me-2 ms-2">Admin</span>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-warning" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-shield-shaded"></i> Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-speedometer2 me-1"></i> Admin Panel</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin.audit_logs') }}"><i class="bi bi-journal-text me-1"></i> Audit Logs</a></li>
+                                </ul>
                             </li>
                         {% endif %}
                         <li class="nav-item">
