@@ -36,6 +36,11 @@ app = Flask(__name__)
 # Load settings from our Config class (secret key, database, etc.)
 app.config.from_object(Config)
 
+# Register Blueprints
+from routes.auth import auth_bp
+app.register_blueprint(auth_bp)
+
+
 
 # =============================================
 # Routes

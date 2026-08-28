@@ -54,15 +54,44 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Nav links (will grow in later phases) -->
+            <!-- Nav links -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('home') }}">
                             <i class="bi bi-house"></i> Home
                         </a>
                     </li>
-                    <!-- Login/Register links will be added in Phase 2 -->
+                    {% if session.get('user_id') %}
+                        <!-- Logged-in navigation -->
+                        {% if session.get('role') == 'admin' %}
+                            <li class="nav-item">
+                                <span class="badge bg-warning text-dark me-2 ms-2">Admin</span>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <span class="nav-link text-white-50">
+                                <i class="bi bi-person-circle"></i> {{ session.get('username') }}
+                            </span>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-danger btn-sm" href="{{ url_for('auth.logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <!-- Logged-out navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary btn-sm px-3" href="{{ url_for('auth.register') }}">
+                                <i class="bi bi-person-plus"></i> Register
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

@@ -20,13 +20,18 @@
         <p class="lead">Your secure mini digital wallet</p>
         <p class="text-white-50 mb-4">Deposit &bull; Withdraw &bull; Transfer &bull; Track</p>
         <div class="mt-4">
-            <!-- These links will point to real pages in Phase 2 -->
-            <a href="#" class="btn btn-light btn-lg me-2 shadow">
-                <i class="bi bi-person-plus-fill"></i> Register
-            </a>
-            <a href="#" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-box-arrow-in-right"></i> Login
-            </a>
+            {% if session.get('user_id') %}
+                <div class="d-inline-block p-3 rounded bg-dark bg-opacity-50 text-white mb-2">
+                    <span class="fs-5">Logged in as <strong>{{ session.get('full_name') }}</strong> (<code>@{{ session.get('username') }}</code>)</span>
+                </div>
+            {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg me-2 shadow">
+                    <i class="bi bi-person-plus-fill"></i> Register Now
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </a>
+            {% endif %}
         </div>
     </div>
 </section>
