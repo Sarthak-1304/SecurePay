@@ -37,9 +37,9 @@ def validate_registration(username, email, full_name, password, confirm_password
     email = email.strip()
     full_name = full_name.strip()
 
-    # 2. Validate username format (letters, numbers, underscores, length 3-30)
-    if not re.match(r'^[a-zA-Z0-9_]{3,30}$', username):
-        return False, "Username must be 3-30 characters and contain only letters, numbers, and underscores."
+    # 2. Validate username format (letters, numbers, underscores, hyphens, length 3-30)
+    if not re.match(r'^[a-zA-Z0-9_-]{3,30}$', username):
+        return False, "Username must be 3-30 characters and contain only letters, numbers, underscores (_), or hyphens (-)."
 
     # 3. Validate email format
     email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
