@@ -336,11 +336,11 @@ def request_unlock():
                 conn.commit()
 
             # Show friendly message regardless of existence (prevents user enumeration)
-            flash("Your unlock request has been submitted to the administrator queue. Please check back shortly or email admin@securepay.com.", "success")
+            flash("Your unlock request has been submitted to the administrator queue. Please check back shortly.", "success")
             return redirect(url_for('auth.login'))
         except Exception as e:
             conn.rollback()
-            flash("An error occurred while submitting your request. Please email admin@securepay.com directly.", "danger")
+            flash("An error occurred while submitting your request. Please try again later.", "danger")
             return render_template('auth/request_unlock.html')
         finally:
             cursor.close()
